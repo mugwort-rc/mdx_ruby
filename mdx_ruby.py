@@ -2,7 +2,7 @@
 Ruby Extension for Python-Markdown
 ==================================
 
-Converts \[kana](-kanji) to <ruby><rb>kanji</rb><rp>(</rp><rt>kana</rt><rp>)</rp></ruby>.
+Converts \[kanji](ruby:kana) to <ruby><rb>kanji</rb><rp>(</rp><rt>kana</rt><rp>)</rp></ruby>.
 Its syntax is same as http://pandoc.org/scripting.html#a-filter-for-ruby-text.
 
 License: [BSD](http://www.opensource.org/licenses/bsd-license.php)
@@ -19,15 +19,15 @@ import re
 class RubyExtension(Extension):
     def extendMarkdown(self, md, md_globals):
         # append to inline patterns
-        RUBY_RE = r'\[([^\]]+)\]\(-([^\)]+)\)'
+        RUBY_RE = r'\[([^\]]+)\]\(ruby:([^\)]+)\)'
         md.inlinePatterns.add('ruby', Ruby(RUBY_RE), "<link")
 
 
 class Ruby(Pattern):
     def handleMatch(self, m):
-        kana = m.group(2).strip()
-        kanji = m.group(3).strip()
-        if kana and kanji:
+        kanji = m.group(2).strip()
+        kana = m.group(3).strip()
+        if kanji and kana:
             ruby = etree.Element('ruby')
             etree.SubElement(ruby, 'rb').text = kanji
             etree.SubElement(ruby, 'rp').text = u'('
